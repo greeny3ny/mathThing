@@ -1,0 +1,47 @@
+body{
+	background-color: #ccfbff;
+}
+
+p {
+	color:blue;
+}
+
+h1{
+	color:red;
+	font-size:16vh;
+	text-align: center;
+	width: 98%;
+}
+
+input{
+	color:black;
+	background-color:#97bcfc;
+	border:0;
+	margin:1px;
+	width:48vw;
+	height: 30vh;
+	padding:10px;
+	display: inline-block;
+
+	font-size: 15vh;
+	
+	font-weight: 700;
+	
+}
+
+input:hover{
+	background-color:#688AF9;
+	cursor: pointer;
+}
+
+td{
+	width:0;
+}
+
+#s1{
+	float:left;
+}
+
+#s2{
+	float:right;
+}

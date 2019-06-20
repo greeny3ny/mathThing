@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+	<head>
+	
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		
+		<link rel="icon" sizes="192x192" href="icons/icon.png" />
+		<link rel="apple-touch-icon" href="icons/icon.png" />
+		<link rel="shortcut icon" href="icons/weeicon.png" type="image/x-icon" />
+	
+	
+		<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+		<script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script>
+		
+
+		<title>CMG</title>
+		<link href="styles/html5reset.css" rel="stylesheet"/>
+		<link href="styles/style.css" rel="stylesheet"/>
+	</head>
+
+	<body onload="startup()">
+		
+		<p id="sub">Craig's Math Game thing</p>
+		
+	
+	<div id="display">
+	
+		<h1 id="h_equation"> an equation goes here </h3>
+	
+		<input id="h_a0" type="button" value="0" onclick="buttonClicked(0);" />
+		<input id="h_a1" type="button" value="1" onclick="buttonClicked(1);" />
+		<input id="h_a2" type="button" value="2" onclick="buttonClicked(2);" />
+		<input id="h_a3" type="button" value="3" onclick="buttonClicked(3);" />
+	
+	
+	</div>
+	
+	<div id="score">
+	
+		<p id="h_correct"> Correct : 0</p>
+		<p id="h_wrong">Wrong : 0</p>
+	
+	<div>
+
+	</body>
+		
+</html>
+
+
+<script>
+	
+	var buttons = document.querySelectorAll("input[type=button]");
+	var correctAnswer = 0;
+	
+	var correctNumber = 0;
+	var wrongNumber = 0;
+	
+	function startup(){
+		console.log("Loaded!");
+	
+		generateNextQuestion();
+
+	}
+	
+	function generateNextQuestion(){
+	
+		//generate equation
+		var a = Math.floor(Math.random() * 10) + 1; //1 to 10
+		var b = Math.floor(Math.random() * 10) + 1; //1 to 10
+		
+		var operationDecider = Math.floor(Math.random() * 3); // 0 to 3
+		var operator = "+";
+		
+		switch(operationDecider){
+			case 0:
+				operator = "+";
+				correctAnswer = a+b;
+			break;
+			case 1:
+				operator = "-";
+				correctAnswer = a-b;
+			break;
+			case 2:
+				operator = "*";
+				correctAnswer = a*b;
+			break;
+			default:
+			
+		}
+		
+		h_equation.innerText = a + " " + operator + " " + b;
+		
+		//generate things for the buttons
+		
+		
+		
+		var buttonWithCorrectAnswer = Math.floor(Math.random() * 4) //0 to 3
+
+		for (var i=0; i<4; i++){
+			
+			if (i == buttonWithCorrectAnswer){
+				buttons[i].value = correctAnswer;
+			} else {
+			
+				do{
+					var c = Math.floor(Math.random() * (correctAnswer + 5)) + (correctAnswer-5); //correct-5 to correct+5
+					buttons[i].value = c;
+				} while (c == correctAnswer);
+			}
+			
+		}
+	
+	}
+	
+	function updateStats(c, w){
+	
+		h_correct.innerText = "Correct : " + c;
+		h_wrong.innerText = "Wrong : " + w;
+	
+	}
+	
+	function buttonClicked(x){
+	
+		if (buttons[x].value == correctAnswer){
+			correctNumber ++;
+			//generate next stuff
+			
+		} else {
+			wrongNumber ++;
+		}
+		
+		generateNextQuestion();
+		updateStats(correctNumber, wrongNumber);
+	
+	}
+	
+	
+</script>
