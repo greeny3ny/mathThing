@@ -23,28 +23,50 @@
 	</head>
 
 	<body onload="startup()">
+	
+		<div id="div_display">
 		
-		<p id="sub">Craig's Math Game thing</p>
+			<h1 id="h_equation"> an equation goes here </h3>
 		
-	
-	<div id="display">
-	
-		<h1 id="h_equation"> an equation goes here </h3>
-	
-		<input id="h_a0" type="button" value="0" onclick="buttonClicked(0);" />
-		<input id="h_a1" type="button" value="1" onclick="buttonClicked(1);" />
-		<input id="h_a2" type="button" value="2" onclick="buttonClicked(2);" />
-		<input id="h_a3" type="button" value="3" onclick="buttonClicked(3);" />
-	
-	
-	</div>
-	
-	<div id="score">
-	
-		<p id="h_correct"> Correct : 0</p>
-		<p id="h_wrong">Wrong : 0</p>
-	
-	<div>
+			<input id="h_a0" type="button" value="0" onclick="buttonClicked(0);" />
+			<input id="h_a1" type="button" value="1" onclick="buttonClicked(1);" />
+			<input id="h_a2" type="button" value="2" onclick="buttonClicked(2);" />
+			<input id="h_a3" type="button" value="3" onclick="buttonClicked(3);" />
+		
+		
+		</div>
+		
+		<div id="div_score">
+		
+			<table style="width:98%">
+				<tr>
+					<td>
+						<p id="h_correct"> Correct : 0</p>
+					</td>
+					<td>
+						<p id="h_wrong">Wrong : 0</p>
+					</td>
+				</tr>
+			</table>
+		
+			
+			
+			<p id="h_debug">Difficulty Factor : 0</p>
+			<p id="h_score">Score : 0</p>
+			<p id="h_timer"></p>
+			
+			<input id="h_back" type="button" value="Back" onclick="menu('home');" />
+		
+		</div>
+		
+		<div id="div_menu">
+		
+			<h2 style="font-size:10vh; padding:10px">Craig's Wierd Maths Thing</h2>
+		
+			<input id="h_m0" type="button" value="ENDLESS MODE" onclick="menu('endless');" />
+			<input id="h_m1" type="button" value="TIMED MODE" onclick="menu('timed');" />
+		
+		</div>
 
 	</body>
 		
@@ -52,27 +74,89 @@
 
 
 <script>
+
+	var buttonsContainer = document.querySelector("#div_display");
+	var buttons = buttonsContainer.querySelectorAll("input[type=button]");
 	
-	var buttons = document.querySelectorAll("input[type=button]");
+	console.log(buttons);
+	
 	var correctAnswer = 0;
 	
 	var correctNumber = 0;
 	var wrongNumber = 0;
 	
+	var difficultyFactor = 0; 
+	
+	var timer_timeSize = 0;
+	var timer_timer;
+	
 	function startup(){
 		console.log("Loaded!");
 	
-		generateNextQuestion();
+		div_display.hidden = true;
+		div_score.hidden = true;
+		div_menu.hidden = false;
+	
+		//generateNextQuestion();
 
+	}
+	
+	function menu(input){
+		
+		switch (input){
+			case 'home':
+				div_display.hidden = true;
+				div_score.hidden = true;
+				div_menu.hidden = false;
+				
+				clearTimeout(timer_timer);
+				
+			break;
+			case 'endless':
+				div_display.hidden = false;
+				div_score.hidden = false;
+				div_menu.hidden = true;
+				
+				correctNumber = 0;
+				wrongNumber = 0;
+				difficultyFactor = 0;
+				
+				h_timer.innerText = "";
+				
+				enableButtons(true);
+				generateNextQuestion(); 
+			break;
+			case 'timed':
+				div_display.hidden = false;
+				div_score.hidden = false;
+				div_menu.hidden = true;
+				
+				correctNumber = 0;
+				wrongNumber = 0;
+				difficultyFactor = 0;
+			
+				timer_timeSize = 60;
+				timer_timer = window.setInterval(timer, 1000);
+
+				h_timer.innerText = "Timer : " + timer_timeSize;
+
+				enableButtons(true);				
+				generateNextQuestion();
+			break;
+			
+			
+		}
+
+		
 	}
 	
 	function generateNextQuestion(){
 	
 		//generate equation
-		var a = Math.floor(Math.random() * 10) + 1; //1 to 10
-		var b = Math.floor(Math.random() * 10) + 1; //1 to 10
+		var a = Math.floor(Math.random() * (10+difficultyFactor)) + 1; //1 to 10
+		var b = Math.floor(Math.random() * (10+difficultyFactor)) + 1; //1 to 10
 		
-		var operationDecider = Math.floor(Math.random() * 3); // 0 to 3
+		var operationDecider = Math.floor(Math.random() * 2); // 0 to 3
 		var operator = "+";
 		
 		switch(operationDecider){
@@ -105,7 +189,6 @@
 			if (i == buttonWithCorrectAnswer){
 				buttons[i].value = correctAnswer;
 			} else {
-			
 				do{
 					var c = Math.floor(Math.random() * (correctAnswer + 5)) + (correctAnswer-5); //correct-5 to correct+5
 					buttons[i].value = c;
@@ -116,10 +199,40 @@
 	
 	}
 	
+	
 	function updateStats(c, w){
 	
 		h_correct.innerText = "Correct : " + c;
 		h_wrong.innerText = "Wrong : " + w;
+		
+		if (c%10 == 0){
+			difficultyFactor += 3;
+		}
+		
+		h_debug.innerText = "Difficulty Factor : " + difficultyFactor;
+		
+		h_score.innerText = "Score : " + ((c+difficultyFactor) - w);
+	
+	}
+	
+	function timer(){
+	
+		if (timer_timeSize > 0){
+			timer_timeSize --;
+			h_timer.innerText = "Timer : " + timer_timeSize;
+			console.log(timer_timeSize);
+		} else {
+			enableButtons(false);
+		}
+		
+	
+	}
+	
+	function enableButtons(status){
+	
+		for (var i=0; i<4; i++){
+			buttons[i].disabled = !status;
+		}
 	
 	}
 	
@@ -131,6 +244,9 @@
 			
 		} else {
 			wrongNumber ++;
+			if (difficultyFactor > 0){		
+				difficultyFactor -= 1;
+			}
 		}
 		
 		generateNextQuestion();

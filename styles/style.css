@@ -13,7 +13,7 @@ h1{
 	width: 98%;
 }
 
-input{
+#div_display input{
 	color:black;
 	background-color:#97bcfc;
 	border:0;
@@ -24,6 +24,24 @@ input{
 	display: inline-block;
 
 	font-size: 10vh;
+	
+	-webkit-border-radius:0px;
+	-webkit-appearance: none;
+}
+
+input{
+	background-color:#89bc78;
+	border:0;
+	margin:1px;
+	width:98vw;
+	height: 10vh;
+	padding:10px;
+	display: inline-block;
+	
+	font-size: 10vw;
+	
+	-webkit-border-radius:0px;
+	-webkit-appearance: none;
 }
 
 input:hover{
