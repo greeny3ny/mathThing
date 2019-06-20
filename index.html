@@ -51,7 +51,7 @@
 		
 			
 			
-			<p id="h_debug">Difficulty Factor : 0</p>
+			<p id="h_difficulty">Difficulty Factor : 0</p>
 			<p id="h_score">Score : 0</p>
 			<p id="h_timer"></p>
 			
@@ -65,6 +65,9 @@
 		
 			<input id="h_m0" type="button" value="ENDLESS MODE" onclick="menu('endless');" />
 			<input id="h_m1" type="button" value="TIMED MODE" onclick="menu('timed');" />
+			
+			<input id="h_m2" type="button" value="ENDURANCE MODE" onclick="menu('endurance');" />
+			<input id="h_m3" type="button" value="ONE LIFE MODE" onclick="menu('onelife');" />
 		
 		</div>
 
@@ -90,6 +93,8 @@
 	var timer_timeSize = 0;
 	var timer_timer;
 	
+	var mode = "";
+	
 	function startup(){
 		console.log("Loaded!");
 	
@@ -102,6 +107,8 @@
 	}
 	
 	function menu(input){
+		
+		mode = input;
 		
 		switch (input){
 			case 'home':
@@ -117,12 +124,9 @@
 				div_score.hidden = false;
 				div_menu.hidden = true;
 				
-				correctNumber = 0;
-				wrongNumber = 0;
-				difficultyFactor = 0;
-				
 				h_timer.innerText = "";
 				
+				resetStage();
 				enableButtons(true);
 				generateNextQuestion(); 
 			break;
@@ -130,18 +134,45 @@
 				div_display.hidden = false;
 				div_score.hidden = false;
 				div_menu.hidden = true;
-				
-				correctNumber = 0;
-				wrongNumber = 0;
-				difficultyFactor = 0;
 			
 				timer_timeSize = 60;
 				timer_timer = window.setInterval(timer, 1000);
 
 				h_timer.innerText = "Timer : " + timer_timeSize;
-
+				
+				resetStage();
 				enableButtons(true);				
 				generateNextQuestion();
+			break;
+			case 'endurance':
+			
+			div_display.hidden = false;
+			div_score.hidden = false;
+			div_menu.hidden = true;
+			
+			timer_timeSize = 60;
+			timer_timer = window.setInterval(timer, 1000);
+			
+			h_timer.innerText = "Timer : " + timer_timeSize;
+				
+			resetStage();
+			enableButtons(true);				
+			generateNextQuestion();
+			break;
+			case 'onelife':
+			
+			div_display.hidden = false;
+			div_score.hidden = false;
+			div_menu.hidden = true;
+			
+			timer_timeSize = 60;
+			timer_timer = window.setInterval(timer, 1000);
+			
+			h_timer.innerText = "Timer : " + timer_timeSize;
+				
+			resetStage();
+			enableButtons(true);				
+			generateNextQuestion();
 			break;
 			
 			
@@ -209,7 +240,7 @@
 			difficultyFactor += 3;
 		}
 		
-		h_debug.innerText = "Difficulty Factor : " + difficultyFactor;
+		h_difficulty.innerText = "Difficulty Factor : " + difficultyFactor;
 		
 		h_score.innerText = "Score : " + ((c+difficultyFactor) - w);
 	
@@ -236,17 +267,42 @@
 	
 	}
 	
+	function resetStage(){
+	
+		correctNumber = 0;
+		wrongNumber = 0;
+		difficultyFactor = 0;
+	
+		h_correct.innerText = "Correct : 0";
+		h_wrong.innerText = "Wrong : 0";
+		h_difficulty.innerText = "Difficulty Factor : 0";
+		h_score.innerText = "Score : 0";
+	}
+	
 	function buttonClicked(x){
 	
 		if (buttons[x].value == correctAnswer){
 			correctNumber ++;
 			//generate next stuff
 			
+			if (mode == 'endurance'){
+				timer_timeSize += 3;
+			}
+			
 		} else {
 			wrongNumber ++;
 			if (difficultyFactor > 0){		
 				difficultyFactor -= 1;
 			}
+			
+			if (mode == 'endurance'){
+				timer_timeSize -= 6;
+			}
+			if (mode == 'onelife'){
+				timer_timeSize = 0;
+				h_timer.innerText = "Timer : 0";
+			}
+			
 		}
 		
 		generateNextQuestion();
